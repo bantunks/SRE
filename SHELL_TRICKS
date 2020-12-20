@@ -1,0 +1,5 @@
+Without doing remote login, execute command on the remote host using SSH --
+ssh root@host "su - other_user -c 'command'".  ---> notice the -c option
+
+Without doing remote login, execute command on the remote host as another user using SSH --
+ssh root@host 'ls -lart /tmp'.  ---> notice the lack of any option after host
