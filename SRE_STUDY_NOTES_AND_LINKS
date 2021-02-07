@@ -1,0 +1,36 @@
+SCALE RELATED STUDY AND LINKS —
+
+https://engineering.fb.com/2015/12/03/ios/under-the-hood-broadcasting-live-video-to-millions/
+
+https://engineering.fb.com/2020/08/17/production-engineering/async/
+
+https://engineering.fb.com/2020/03/18/production-engineering/ntp-service/
+
+https://engineering.fb.com/2018/02/12/production-engineering/how-production-engineers-support-global-events-on-facebook/
+
+https://engineering.fb.com/2019/05/28/data-infrastructure/dhcplb-server/
+
+Scaling services with Shard Manager   —->   https://engineering.fb.com/2020/08/24/production-engineering/scaling-services-with-shard-manager/
+
+Throughput autoscaling: Dynamic sizing for Facebook.com   —>   https://engineering.fb.com/2020/09/14/networking-traffic/throughput-autoscaling/
+
+[VERY INTERESTING AND IMPORTANT] Asynchronous computing @Facebook: Driving efficiency and developer productivity at Facebook scale   —>   https://engineering.fb.com/2020/08/17/production-engineering/async/
+
+Load Balancers — L7 (HTTPS) VS L4(TCP)
+
+TCP vs HTTP(S) Load Balancing    —>     https://medium.com/martinomburajr/distributed-computing-tcp-vs-http-s-load-balancing-7b3e9efc6167
+
+Maglev: A Fast and Reliable Software Network Load Balancer —> https://research.google/pubs/pub44824/  LOAD BALANCING AND SCALE-OUT ARCHITECTURES    -—>     https://network-insight.net/2015/02/load-balancing-and-scale-out-architectures/
+
+1+1 redundancy VS 1+N redundancy.  —>    https://docs.microsoft.com/en-gb/archive/blogs/kenj/11-redundancy-just-isnt-good-enough   (VERY VERY IMPORTANT LINK — MUST READ BEFORE PROJECT MANAGEMENT INTERVIEW)
+
+In services 1+1 redundancy does not equal 2
+ 
+The thing about 1+1 redundancy that people often forget is that when the 1 goes down you have lost your safety net and now you must react quickly in case the +1 should also fail. If this was the only exposure we had, then maybe we could live with it, but the reality is that due to ongoing maintenance and patching our 1+1 is down to just the +1 far more often than just failure scenarios. If you add up all the maintenance windows for a service, you will probably find something on the order of .005% of a year is spent in maintenance. In other words, we are at 1+1 redundancy just 99.995% of a year.
+
+The solution to the problems of 1+1 is 1+N.
+ 
+For me, 1+N is the right solution as long as N is >= 3 and all 3 are fully active. I have had debates with individuals that had 1+1 topologies with a warm pair of warm spares. They would insist that the warm spares should count. In another posting I’ll go deeper into the problems with non-active backup solutions.
+ If everyone agrees that 1+N is the right way to go and most services launch with some portions of their service in a 1+N configuration, then why do we have so many places where we truncate down to 1+1? The answer is simple is as simple as dollars and cents. The answer is a bad assessment of COGS and risk. The answer is a poor application of the phrase “high availability”.
+ Everyone knows to avoid any single point of failure in a service so we design to eliminate them. The mistake in going with 1+1 usually occurs around the very expensive devices and the decisions folks make there to “save” money.
+ Big routers are very expensive. Big load balancers are very expensive. SQL Servers with multi-terabytes of unique user data are very expensive. We can’t have a single point of failure but we can’t afford more than one extra of any device in the system or the COGS model will be too high. That leads to the 1+1 mistake. Perceived cost and a need for some kind of redundancy cause teams to make this mistake time and again.
