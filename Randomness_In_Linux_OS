@@ -1,0 +1,11 @@
+Entropy in RHEL based cloud instances -- https://developers.redhat.com/blog/2017/10/05/entropy-rhel-based-cloud-instances#
+
+The kernel random number generator (RNG) constantly estimates the number of bits of noise in the entropy pool and when processes read from /dev/random, the kernel only returns random bytes within this estimate -- that is, the read will block until the kernel estimates that there's enough randomness in the RNG to feed out another byte.
+
+The /dev/urandom device gets its data from the kernel RNG just like /dev/random; however, it doesn't pay any attention to the available entropy estimate--think "u" for "unlocked" (i.e., doesn't lock/block). So, when applications request data from /dev/urandom, the kernel starts feeding out random bytes and the entropy_avail value starts dropping, but unlike with /dev/random, the kernel keeps returning bytes after the estimated number of bits in the entropy pool drops below a certain point. There's no waiting for the additional environmental noise to be integrated into the entropy pool.
+
+Where in workstations with mouse and keyboards the entropy shouldn’t be a problem, in headless systems like cloud instances it can be more complicated and dependent on the hardware where the instances are running.
+
+The following command will tell you the available entropy in your system:
+$ cat /proc/sys/kernel/random/entropy_avail
+The consensus is that numbers below 1000 will lead to processes blocking waiting for more entropy.
